@@ -1,10 +1,10 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace API.Controllers;
+namespace Api.Controllers;
 [ApiController]
 [Route("api/[controller]")]
-[Authorize(Roles = "User")]
+
 public class ApiBaseController : ControllerBase
 {
 

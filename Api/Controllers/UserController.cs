@@ -1,7 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Api.Controllers;
 using API.Dtos;
 using API.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -16,6 +13,7 @@ public class UserController : ApiBaseController
     {
         _userService = userService;
     }
+    
     [HttpPost("register")]
     public async Task<ActionResult> RegisterAsync(RegisterDto model)
     {
@@ -35,12 +33,12 @@ public class UserController : ApiBaseController
         return Ok(result);
     }
 
-    // [HttpPost("addrole")]
-    // public async Task<IActionResult> AddRoleAsync(AddRoleDto model)
-    // {
-    //     var result = await _userService.AddRoleAsync(model);
-    //     return Ok(result);
-    // }
+    [HttpPost("addrole")]
+    public async Task<IActionResult> AddRoleAsync(AddRoleDto model)
+    {
+        var result = await _userService.AddRoleAsync(model);
+        return Ok(result);
+    }
 
     [HttpPost("refresh-token")]
     public async Task<IActionResult> RefreshToken()

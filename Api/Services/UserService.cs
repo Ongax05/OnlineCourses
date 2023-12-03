@@ -52,7 +52,7 @@ public class UserService : IUserService
                 _unitOfWork.Users.Add(user);
                 await _unitOfWork.SaveAsync();
 
-                return $"User  {registerDto.Username} has been registered successfully";
+                return $"User {registerDto.Username} has been registered successfully";
             }
             catch (Exception ex)
             {
@@ -199,7 +199,7 @@ public class UserService : IUserService
             return new RefreshToken
             {
                 Token = Convert.ToBase64String(randomNumber),
-                Expires = DateTime.UtcNow.AddDays(10),
+                Expires = DateTime.UtcNow.AddMinutes(10),
                 Created = DateTime.UtcNow
             };
         }

@@ -44,13 +44,10 @@ app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
-app.UseCors("CorsPolicy");
 
 app.UseAuthentication();
 
 app.UseIpRateLimiting();
-
-app.Run();
 
 app.MapControllers();
 

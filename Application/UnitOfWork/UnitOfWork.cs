@@ -1,4 +1,5 @@
 using Application.Repository;
+using Domain.Entities;
 using Domain.Interfaces;
 using Percistency.Data;
 namespace Application.UnitOfWork;
@@ -31,6 +32,52 @@ public class UnitOfWork : IUnitOfWork, IDisposable
     public async Task<int> SaveAsync()
     {
         return await _context.SaveChangesAsync();
+    }
+    private IComment _Comments;
+    public IComment Comments
+    {
+        get
+        {
+            _Comments ??= new CommentRepository(_context);
+            return _Comments;
+        }
+    }
+
+    private ICourseImage _CourseImages;
+    public ICourseImage CourseImages
+    {
+        get
+        {
+            _CourseImages ??= new CourseImageRepository(_context);
+            return _CourseImages;
+        }
+    }
+    private ICourse _Courses;
+    public ICourse Courses
+    {
+        get
+        {
+            _Courses ??= new CourseRepository(_context);
+            return _Courses;
+        }
+    }
+    private IInstructor _Instructors;
+    public IInstructor Instructors
+    {
+        get
+        {
+            _Instructors ??= new InstructorRepository(_context);
+            return _Instructors;
+        }
+    }
+    private IQualification _Qualifications;
+    public IQualification Qualifications
+    {
+        get
+        {
+            _Qualifications ??= new QualificationRepository(_context);
+            return _Qualifications;
+        }
     }
 
     public void Dispose()
