@@ -10,9 +10,6 @@ namespace Api.Dtos
     public class CourseImageDto
     {
         public int Id { get; set; }
-        public int CourseId { get; set; }
-        [DataType(DataType.Upload)]
-        [SwaggerSchema(Format = "byte", Title = "ImageData")]
         public byte[] Image { get; set; }
         public DateTime UploadDate { get; set; }
     }

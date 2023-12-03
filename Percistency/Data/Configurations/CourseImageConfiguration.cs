@@ -16,7 +16,6 @@ namespace Percistency.Data.Configurations
 
             builder.Property(p=>p.Image).HasColumnName("Image").HasColumnType("varbinary(MAX)").IsRequired();
             builder.Property(p=>p.UploadDate).HasColumnName("UploadDate").HasColumnType("datetime").IsRequired();
-            builder.HasOne(i=>i.Course).WithOne(i=>i.CourseImage).HasForeignKey<CourseImage>(i=>i.CourseId).IsRequired(false);
         }
     }
 }
