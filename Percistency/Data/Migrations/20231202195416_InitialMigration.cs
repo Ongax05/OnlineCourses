@@ -6,25 +6,11 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Percistency.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class Entities1 : Migration
+    public partial class InitialMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.CreateTable(
-                name: "CourseImage",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Image = table.Column<byte[]>(type: "varbinary(MAX)", nullable: false),
-                    UploadDate = table.Column<DateTime>(type: "datetime", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_CourseImage", x => x.Id);
-                });
-
             migrationBuilder.CreateTable(
                 name: "Rol",
                 columns: table => new
@@ -136,11 +122,6 @@ namespace Percistency.Data.Migrations
                 {
                     table.PrimaryKey("PK_Course", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Course_CourseImage_CourseImageId",
-                        column: x => x.CourseImageId,
-                        principalTable: "CourseImage",
-                        principalColumn: "Id");
-                    table.ForeignKey(
                         name: "FK_Course_Instructor_InstructorId",
                         column: x => x.InstructorId,
                         principalTable: "Instructor",
@@ -171,6 +152,26 @@ namespace Percistency.Data.Migrations
                         principalTable: "User",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "CourseImage",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CourseId = table.Column<int>(type: "int", nullable: false),
+                    Image = table.Column<byte[]>(type: "varbinary(MAX)", nullable: false),
+                    UploadDate = table.Column<DateTime>(type: "datetime", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CourseImage", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_CourseImage_Course_CourseId",
+                        column: x => x.CourseId,
+                        principalTable: "Course",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -205,14 +206,15 @@ namespace Percistency.Data.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Course_CourseImageId",
-                table: "Course",
-                column: "CourseImageId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Course_InstructorId",
                 table: "Course",
                 column: "InstructorId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CourseImage_CourseId",
+                table: "CourseImage",
+                column: "CourseId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Instructor_UserId",
@@ -243,6 +245,9 @@ namespace Percistency.Data.Migrations
                 name: "Comment");
 
             migrationBuilder.DropTable(
+                name: "CourseImage");
+
+            migrationBuilder.DropTable(
                 name: "Qualidication");
 
             migrationBuilder.DropTable(
@@ -256,9 +261,6 @@ namespace Percistency.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "Rol");
-
-            migrationBuilder.DropTable(
-                name: "CourseImage");
 
             migrationBuilder.DropTable(
                 name: "Instructor");

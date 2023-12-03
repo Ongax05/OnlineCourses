@@ -75,8 +75,6 @@ namespace Percistency.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CourseImageId");
-
                     b.HasIndex("InstructorId");
 
                     b.ToTable("Course", (string)null);
@@ -90,6 +88,9 @@ namespace Percistency.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("CourseId")
+                        .HasColumnType("int");
+
                     b.Property<byte[]>("Image")
                         .IsRequired()
                         .HasColumnType("varbinary(MAX)")
@@ -100,6 +101,9 @@ namespace Percistency.Data.Migrations
                         .HasColumnName("UploadDate");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CourseId")
+                        .IsUnique();
 
                     b.ToTable("CourseImage", (string)null);
                 });
@@ -268,19 +272,22 @@ namespace Percistency.Data.Migrations
 
             modelBuilder.Entity("Domain.Entities.Course", b =>
                 {
-                    b.HasOne("Domain.Entities.CourseImage", "CourseImage")
-                        .WithMany("Courses")
-                        .HasForeignKey("CourseImageId");
-
                     b.HasOne("Domain.Entities.Instructor", "Instructor")
                         .WithMany("Courses")
                         .HasForeignKey("InstructorId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("CourseImage");
-
                     b.Navigation("Instructor");
+                });
+
+            modelBuilder.Entity("Domain.Entities.CourseImage", b =>
+                {
+                    b.HasOne("Domain.Entities.Course", "Course")
+                        .WithOne("CourseImage")
+                        .HasForeignKey("Domain.Entities.CourseImage", "CourseId");
+
+                    b.Navigation("Course");
                 });
 
             modelBuilder.Entity("Domain.Entities.Instructor", b =>
@@ -345,12 +352,9 @@ namespace Percistency.Data.Migrations
                 {
                     b.Navigation("Comments");
 
-                    b.Navigation("Qualifications");
-                });
+                    b.Navigation("CourseImage");
 
-            modelBuilder.Entity("Domain.Entities.CourseImage", b =>
-                {
-                    b.Navigation("Courses");
+                    b.Navigation("Qualifications");
                 });
 
             modelBuilder.Entity("Domain.Entities.Instructor", b =>

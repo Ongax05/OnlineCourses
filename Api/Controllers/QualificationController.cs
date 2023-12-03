@@ -1,4 +1,4 @@
-using Dtos;
+using Api.Dtos;
 using AutoMapper;
 using Domain.Entities;
 using Domain.Interfaces;
