@@ -1,5 +1,5 @@
 using Api.Controllers;
-using API.Dtos;
+using Dtos;
 using API.Services;
 using Microsoft.AspNetCore.Mvc;
 

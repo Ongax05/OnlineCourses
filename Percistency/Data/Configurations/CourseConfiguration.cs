@@ -18,6 +18,7 @@ namespace Percistency.Data.Configurations
             builder.Property(p=>p.Description).HasColumnName("Description").HasMaxLength(300).IsRequired();
             builder.HasOne(p=>p.Instructor).WithMany(p=>p.Courses).HasForeignKey(p=>p.InstructorId);
             builder.Property(p=>p.AverageRating).HasColumnName("AverageRating").HasColumnType("float").IsRequired();
+            builder.HasOne(p=>p.CourseImage).WithMany(p=>p.Courses).HasForeignKey(p=>p.CourseImageId);
         }
     }
 }

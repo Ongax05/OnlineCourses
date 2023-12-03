@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace API.Dtos;
+namespace Dtos;
 
     public class DataUserDto
     {
