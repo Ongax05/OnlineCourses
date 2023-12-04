@@ -19,7 +19,6 @@ namespace Percistency.Data
         public DbSet<Course> Courses { get; set; }
         public DbSet<Instructor> Instructors { get; set; }
         public DbSet<Qualification> Qualifications { get; set; }
-        public int MyProperty { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

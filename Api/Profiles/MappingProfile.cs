@@ -9,7 +9,6 @@ namespace API.Profiles
         public MappingProfile (){
             CreateMap<Comment,CommentDto>().ReverseMap();
             CreateMap<Course,CourseDto>().ReverseMap();
-            CreateMap<CourseImage,CourseImageDto>().ReverseMap();
             CreateMap<Instructor,InstructorDto>().ReverseMap();
             CreateMap<Qualification,QualificationDto>().ReverseMap();
         }

@@ -6,25 +6,11 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Percistency.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialMigration : Migration
+    public partial class Entities1 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.CreateTable(
-                name: "CourseImage",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Image = table.Column<byte[]>(type: "varbinary(MAX)", nullable: false),
-                    UploadDate = table.Column<DateTime>(type: "datetime", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_CourseImage", x => x.Id);
-                });
-
             migrationBuilder.CreateTable(
                 name: "Rol",
                 columns: table => new
@@ -128,18 +114,13 @@ namespace Percistency.Data.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Title = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
                     Description = table.Column<string>(type: "nvarchar(300)", maxLength: 300, nullable: false),
-                    CourseImageId = table.Column<int>(type: "int", nullable: true),
+                    Image = table.Column<byte[]>(type: "varbinary(MAX)", nullable: false),
                     InstructorId = table.Column<int>(type: "int", nullable: false),
                     AverageRating = table.Column<double>(type: "float", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Course", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Course_CourseImage_CourseImageId",
-                        column: x => x.CourseImageId,
-                        principalTable: "CourseImage",
-                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Course_Instructor_InstructorId",
                         column: x => x.InstructorId,
@@ -205,11 +186,6 @@ namespace Percistency.Data.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Course_CourseImageId",
-                table: "Course",
-                column: "CourseImageId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Course_InstructorId",
                 table: "Course",
                 column: "InstructorId");
@@ -256,9 +232,6 @@ namespace Percistency.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "Rol");
-
-            migrationBuilder.DropTable(
-                name: "CourseImage");
 
             migrationBuilder.DropTable(
                 name: "Instructor");

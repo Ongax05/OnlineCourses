@@ -1,4 +1,3 @@
-
 using System.Text;
 using API.Helpers;
 using API.Services;
@@ -18,28 +17,36 @@ public static class ApplicationServiceExtensions
     public static void ConfigureCors(this IServiceCollection services) =>
         services.AddCors(options =>
         {
-            options.AddPolicy("CorsPolicy", builder =>
-                builder.AllowAnyOrigin() 
-                    .WithMethods("GET")
-                    .AllowAnyHeader());
+            options.AddPolicy(
+                "CorsPolicy",
+                builder =>
+                    builder
+                        .WithOrigins("http://localhost:5275")
+                        .AllowAnyMethod()
+                        .AllowAnyHeader()
+                        .AllowCredentials()
+            );
         });
+
     public static void AddAplicacionServices(this IServiceCollection services)
     {
         services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
     }
+
     public static void AddJwt(this IServiceCollection services, IConfiguration configuration)
     {
         //Configuration from AppSettings
         services.Configure<JWT>(configuration.GetSection("JWT"));
 
         //Adding Athentication - JWT
-        services.AddAuthentication(options =>
-        {
-            options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-            options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-        })
+        services
+            .AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
             .AddJwtBearer(o =>
             {
                 o.RequireHttpsMetadata = false;
@@ -53,50 +60,53 @@ public static class ApplicationServiceExtensions
                     ClockSkew = TimeSpan.Zero,
                     ValidIssuer = configuration["JWT:Issuer"],
                     ValidAudience = configuration["JWT:Audience"],
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWT:Key"]))
+                    IssuerSigningKey = new SymmetricSecurityKey(
+                        Encoding.UTF8.GetBytes(configuration["JWT:Key"])
+                    )
                 };
             });
     }
+
     public static void AddValidationErrors(this IServiceCollection services)
     {
         services.Configure<ApiBehaviorOptions>(options =>
         {
             options.InvalidModelStateResponseFactory = actionContext =>
             {
+                var errors = actionContext
+                    .ModelState
+                    .Where(u => u.Value.Errors.Count > 0)
+                    .SelectMany(u => u.Value.Errors)
+                    .Select(u => u.ErrorMessage)
+                    .ToArray();
 
-                var errors = actionContext.ModelState.Where(u => u.Value.Errors.Count > 0)
-                                                .SelectMany(u => u.Value.Errors)
-                                                .Select(u => u.ErrorMessage).ToArray();
-
-                var errorResponse = new ApiValidation()
-                {
-                    Errors = errors
-                };
+                var errorResponse = new ApiValidation() { Errors = errors };
 
                 return new BadRequestObjectResult(errorResponse);
             };
         });
     }
-     public static void ConfigureRateLimiting(this IServiceCollection services)
+
+    public static void ConfigureRateLimiting(this IServiceCollection services)
+    {
+        services.AddMemoryCache();
+        services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>();
+        services.AddInMemoryRateLimiting();
+        services.Configure<IpRateLimitOptions>(options =>
         {
-            services.AddMemoryCache();
-            services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>();
-            services.AddInMemoryRateLimiting();
-            services.Configure<IpRateLimitOptions>(options =>
+            options.EnableEndpointRateLimiting = true;
+            options.StackBlockedRequests = false;
+            options.HttpStatusCode = 429;
+            options.RealIpHeader = "X-Real-IP";
+            options.GeneralRules = new List<RateLimitRule>
             {
-                options.EnableEndpointRateLimiting = true;
-                options.StackBlockedRequests = false;
-                options.HttpStatusCode = 429;
-                options.RealIpHeader = "X-Real-IP";
-                options.GeneralRules = new List<RateLimitRule>
+                new()
                 {
-                    new()
-                    {
-                        Endpoint = "*",
-                        Limit = 10,
-                        Period = "15s"
-                    }
-                };
-            });
-        }
+                    Endpoint = "*",
+                    Limit = 10,
+                    Period = "15s"
+                }
+            };
+        });
+    }
 }

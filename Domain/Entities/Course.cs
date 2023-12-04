@@ -10,10 +10,7 @@ namespace Domain.Entities
     {
         public string Title { get; set; }
         public string Description { get; set; }
-        #nullable enable
-        public int? CourseImageId { get; set; }
-        public CourseImage? CourseImage { get; set; }
-        #nullable disable
+        public byte[] Image { get; set; }
         public int InstructorId { get; set; }
         public Instructor Instructor { get; set; }
         public float AverageRating { get; set; }

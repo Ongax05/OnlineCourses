@@ -12,8 +12,8 @@ using Percistency.Data;
 namespace Percistency.Data.Migrations
 {
     [DbContext(typeof(CoursesDbContext))]
-    [Migration("20231203042947_InitialMigration")]
-    partial class InitialMigration
+    [Migration("20231204034308_Entities1")]
+    partial class Entities1
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -58,14 +58,16 @@ namespace Percistency.Data.Migrations
                         .HasColumnType("float")
                         .HasColumnName("AverageRating");
 
-                    b.Property<int?>("CourseImageId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(300)
                         .HasColumnType("nvarchar(300)")
                         .HasColumnName("Description");
+
+                    b.Property<byte[]>("Image")
+                        .IsRequired()
+                        .HasColumnType("varbinary(MAX)")
+                        .HasColumnName("Image");
 
                     b.Property<int>("InstructorId")
                         .HasColumnType("int");
@@ -78,33 +80,9 @@ namespace Percistency.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CourseImageId");
-
                     b.HasIndex("InstructorId");
 
                     b.ToTable("Course", (string)null);
-                });
-
-            modelBuilder.Entity("Domain.Entities.CourseImage", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<byte[]>("Image")
-                        .IsRequired()
-                        .HasColumnType("varbinary(MAX)")
-                        .HasColumnName("Image");
-
-                    b.Property<DateTime>("UploadDate")
-                        .HasColumnType("datetime")
-                        .HasColumnName("UploadDate");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("CourseImage", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.Instructor", b =>
@@ -271,17 +249,11 @@ namespace Percistency.Data.Migrations
 
             modelBuilder.Entity("Domain.Entities.Course", b =>
                 {
-                    b.HasOne("Domain.Entities.CourseImage", "CourseImage")
-                        .WithMany("Courses")
-                        .HasForeignKey("CourseImageId");
-
                     b.HasOne("Domain.Entities.Instructor", "Instructor")
                         .WithMany("Courses")
                         .HasForeignKey("InstructorId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("CourseImage");
 
                     b.Navigation("Instructor");
                 });
@@ -349,11 +321,6 @@ namespace Percistency.Data.Migrations
                     b.Navigation("Comments");
 
                     b.Navigation("Qualifications");
-                });
-
-            modelBuilder.Entity("Domain.Entities.CourseImage", b =>
-                {
-                    b.Navigation("Courses");
                 });
 
             modelBuilder.Entity("Domain.Entities.Instructor", b =>

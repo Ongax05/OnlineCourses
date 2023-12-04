@@ -42,16 +42,6 @@ public class UnitOfWork : IUnitOfWork, IDisposable
             return _Comments;
         }
     }
-
-    private ICourseImage _CourseImages;
-    public ICourseImage CourseImages
-    {
-        get
-        {
-            _CourseImages ??= new CourseImageRepository(_context);
-            return _CourseImages;
-        }
-    }
     private ICourse _Courses;
     public ICourse Courses
     {

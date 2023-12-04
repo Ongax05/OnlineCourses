@@ -68,7 +68,7 @@ public class UserService : IUserService
 
     public async Task<DataUserDto> GetTokenAsync(LoginDto model)
     {
-        DataUserDto dataUserDto = new DataUserDto();
+        DataUserDto dataUserDto = new();
         var user = await _unitOfWork.Users.GetByUsernameAsync(model.Username);
 
         if (user == null)

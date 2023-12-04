@@ -9,7 +9,6 @@ public interface IUnitOfWork
     Task<int> SaveAsync();
     IComment Comments { get; }
     ICourse Courses { get; }
-    ICourseImage CourseImages { get; }
     IInstructor Instructors { get; }
     IQualification Qualifications { get; }
 }

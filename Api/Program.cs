@@ -33,7 +33,9 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 app.UseMiddleware<ExceptionMiddleware>();
-// Configure the HTTP request pipeline.
+
+app.UseCors("CorsPolicy"); // Añade esto para manejar CORS
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -41,14 +43,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
 app.UseAuthorization();
-
-
 app.UseAuthentication();
-
 app.UseIpRateLimiting();
-
 app.MapControllers();
-
 app.Run();
