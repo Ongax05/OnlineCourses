@@ -8,7 +8,7 @@ namespace Api.Dtos
     public class InstructorDto
     {
         public int Id { get; set; }
-        public int UserId { get; set; }
+        public string Name { get; set;}
         #nullable enable
         public string? Description { get; set; }
     }

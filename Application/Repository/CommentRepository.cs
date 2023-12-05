@@ -11,42 +11,10 @@ using Percistency.Data;
 
 namespace Application.Repository
 {
-    public class CommentRepository : IComment
+    public class CommentRepository : GenericRepository<Comment>, IComment
     {
         private readonly CoursesDbContext context;
-        public CommentRepository (CoursesDbContext context)
-        {
-            this.context = context;
-        }
-        public void Add(Comment entity)
-        {
-            context.Set<Comment>().Add(entity);
-        }
+        public CommentRepository(CoursesDbContext context) : base (context) => this.context = context;
 
-        public IEnumerable<Comment> Find(Expression<Func<Comment, bool>> expression)
-        {
-            return context.Set<Comment>().Where(expression);
-        }
-
-        public async Task<IEnumerable<Comment>> GetAllAsync()
-        {
-            return await context.Set<Comment>().ToListAsync();
-        }
-
-        public async Task<Comment> GetByIdsAsync(int courseId, int UserId)
-        {
-            
-            return await context.Set<Comment>().Where(c=> c.CourseId == courseId && c.UserId == UserId).FirstAsync();
-        }
-
-        public void Remove(Comment entity)
-        {
-            context.Set<Comment>().Remove(entity);
-        }
-
-        public void Update(Comment entity)
-        {
-            context.Set<Comment>().Update(entity);
-        }
     }
 }

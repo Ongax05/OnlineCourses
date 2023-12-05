@@ -33,30 +33,5 @@ namespace Api.Controllers
             await _unitOfWork.SaveAsync();
             return CreatedAtAction(nameof(Post), Comment);
         }
-        
-        [HttpPut("{id}")]
-        public async Task<ActionResult<CommentDto>> Put(
-            int id,
-            [FromBody] CommentDto CommentDto
-        )
-        {
-            if (CommentDto == null)
-            {
-                return NotFound(404);
-            }
-            var Comment = _mapper.Map<Comment>(CommentDto);
-            _unitOfWork.Comments.Update(Comment);
-            await _unitOfWork.SaveAsync();
-            return CommentDto;
-        }
-        
-        [HttpDelete("DeleteByIds")]
-        public async Task<ActionResult> Delete([FromQuery]int courseId, int UserId)
-        {
-            var Comment = await _unitOfWork.Comments.GetByIdsAsync(courseId,UserId);
-            _unitOfWork.Comments.Remove(Comment);
-            await _unitOfWork.SaveAsync();
-            return NoContent();
-        }
     }
 }

@@ -7,13 +7,7 @@ using Domain.Entities;
 
 namespace Domain.Interfaces
 {
-    public interface IComment
+    public interface IComment : IGenericRepository<Comment>
     {
-        Task<Comment> GetByIdsAsync(int courseId, int UserId);
-        Task<IEnumerable<Comment>> GetAllAsync();
-        IEnumerable<Comment> Find(Expression<Func<Comment, bool>> expression);
-        void Add(Comment entity);
-        void Remove(Comment entity);
-        void Update(Comment entity);
     }
 }

@@ -9,8 +9,11 @@ namespace API.Profiles
         public MappingProfile (){
             CreateMap<Comment,CommentDto>().ReverseMap();
             CreateMap<Course,CourseDto>().ReverseMap();
-            CreateMap<Instructor,InstructorDto>().ReverseMap();
+            CreateMap<Instructor,InstructorDto>()
+            .ForMember(dest=>dest.Name,Opt=>Opt.MapFrom(en=>en.User.Username))
+            .ReverseMap();
             CreateMap<Qualification,QualificationDto>().ReverseMap();
+            CreateMap<Course,CourseWithEntities>().ReverseMap();
         }
     }
 }

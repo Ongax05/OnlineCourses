@@ -82,6 +82,7 @@ public class UserService : IUserService
 
         if (result == PasswordVerificationResult.Success)
         {
+            dataUserDto.Id = user.Id;
             dataUserDto.IsAuthenticated = true;
             JwtSecurityToken jwtSecurityToken = CreateJwtToken(user);
             dataUserDto.Token = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken);

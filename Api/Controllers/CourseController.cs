@@ -24,6 +24,14 @@ namespace Api.Controllers
             var CourseListDto = _mapper.Map<List<CourseDto>>(registers);
             return CourseListDto;
         }
+
+        [HttpGet("ById")]
+        public async Task<ActionResult<CourseDto>> GetById([FromQuery] int Id)
+        {
+            var Register = await _unitOfWork.Courses.GetByIdAsync(Id);
+            var CourseMapped = _mapper.Map<CourseDto>(Register);
+            return CourseMapped;
+        }
         
         [HttpPost]
         public async Task<ActionResult<Course>> Post(CourseDto CourseDto)

@@ -24,8 +24,6 @@ namespace Percistency.Data
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
-            modelBuilder.Entity<Comment>().HasKey(c=> new {c.CourseId, c.UserId});
-            modelBuilder.Entity<Qualification>().HasKey(q=> new {q.CourseId, q.UserId});
         }
 
     }

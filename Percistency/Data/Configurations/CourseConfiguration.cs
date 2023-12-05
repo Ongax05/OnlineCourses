@@ -15,7 +15,7 @@ namespace Percistency.Data.Configurations
             builder.ToTable("Course");
 
             builder.Property(p=>p.Title).HasColumnName("Title").HasMaxLength(150).IsRequired();
-            builder.Property(p=>p.Description).HasColumnName("Description").HasMaxLength(300).IsRequired();
+            builder.Property(p=>p.Description).HasColumnName("Description").HasMaxLength(1000).IsRequired();
             builder.HasOne(p=>p.Instructor).WithMany(p=>p.Courses).HasForeignKey(p=>p.InstructorId);
             builder.Property(p=>p.AverageRating).HasColumnName("AverageRating").HasColumnType("float").IsRequired();
             builder.Property(p=>p.Image).HasColumnName("Image").HasColumnType("varbinary(MAX)").IsRequired();

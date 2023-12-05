@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Domain.Entities
 {
-    public class Comment
+    public class Comment : BaseEntity
     {
         public int UserId { get; set; }
         public User User { get; set; }

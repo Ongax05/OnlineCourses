@@ -1,4 +1,5 @@
 using Api.Dtos;
+using Application.UnitOfWork;
 using AutoMapper;
 using Domain.Entities;
 using Domain.Interfaces;
@@ -16,48 +17,13 @@ namespace Api.Controllers
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
-        
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<InstructorDto>>> Get1_1()
+
+        [HttpGet("ByName")]
+        public async Task<ActionResult<InstructorDto>> GetByName([FromQuery] string Name)
         {
-            var registers = await _unitOfWork.Instructors.GetAllAsync();
-            var InstructorListDto = _mapper.Map<List<InstructorDto>>(registers);
-            return InstructorListDto;
+            var Instructor = await _unitOfWork.Instructors.GetInstructorByName(Name);
+            return _mapper.Map<InstructorDto>(Instructor);
         }
         
-        [HttpPost]
-        public async Task<ActionResult<Instructor>> Post(InstructorDto InstructorDto)
-        {
-            var Instructor = _mapper.Map<Instructor>(InstructorDto);
-            _unitOfWork.Instructors.Add(Instructor);
-            await _unitOfWork.SaveAsync();
-            InstructorDto.Id = Instructor.Id;
-            return CreatedAtAction(nameof(Post), new { id = InstructorDto.Id }, InstructorDto);
-        }
-        
-        [HttpPut("{id}")]
-        public async Task<ActionResult<InstructorDto>> Put(
-            int id,
-            [FromBody] InstructorDto InstructorDto
-        )
-        {
-            if (InstructorDto == null)
-            {
-                return NotFound(404);
-            }
-            var Instructor = _mapper.Map<Instructor>(InstructorDto);
-            _unitOfWork.Instructors.Update(Instructor);
-            await _unitOfWork.SaveAsync();
-            return InstructorDto;
-        }
-        
-        [HttpDelete("{id}")]
-        public async Task<ActionResult> Delete(int id)
-        {
-            var Instructor = await _unitOfWork.Instructors.GetByIdAsync(id);
-            _unitOfWork.Instructors.Remove(Instructor);
-            await _unitOfWork.SaveAsync();
-            return NoContent();
-        }
     }
 }

@@ -20,6 +20,15 @@ public class UserRepository : GenericRepository<User>, IUserRepository
             .FirstOrDefaultAsync(u => u.RefreshTokens.Any(t => t.Token == refreshToken));
     }
 
+    public override async Task<User> GetByIdAsync(int Id)
+    {
+        return await _context.Users
+            .Where(u=>u.Id == Id)
+            .Include(u => u.Instructor)
+            .FirstOrDefaultAsync();
+            
+    }
+
     public async Task<User> GetByUsernameAsync(string username)
     {
         return await _context.Users

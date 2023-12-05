@@ -8,6 +8,5 @@ namespace Domain.Interfaces
 {
     public interface ICourse : IGenericRepository<Course>
     {
-        
     }
 }

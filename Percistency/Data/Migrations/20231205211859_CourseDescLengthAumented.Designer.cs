@@ -12,8 +12,8 @@ using Percistency.Data;
 namespace Percistency.Data.Migrations
 {
     [DbContext(typeof(CoursesDbContext))]
-    [Migration("20231204034308_Entities1")]
-    partial class Entities1
+    [Migration("20231205211859_CourseDescLengthAumented")]
+    partial class CourseDescLengthAumented
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -27,11 +27,11 @@ namespace Percistency.Data.Migrations
 
             modelBuilder.Entity("Domain.Entities.Comment", b =>
                 {
-                    b.Property<int>("CourseId")
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("CourseComment")
                         .IsRequired()
@@ -39,7 +39,15 @@ namespace Percistency.Data.Migrations
                         .HasColumnType("nvarchar(1000)")
                         .HasColumnName("CourseComment");
 
-                    b.HasKey("CourseId", "UserId");
+                    b.Property<int>("CourseId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasAlternateKey("CourseId", "UserId");
 
                     b.HasIndex("UserId");
 
@@ -60,8 +68,8 @@ namespace Percistency.Data.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasMaxLength(300)
-                        .HasColumnType("nvarchar(300)")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)")
                         .HasColumnName("Description");
 
                     b.Property<byte[]>("Image")
@@ -111,17 +119,25 @@ namespace Percistency.Data.Migrations
 
             modelBuilder.Entity("Domain.Entities.Qualification", b =>
                 {
-                    b.Property<int>("CourseId")
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<int>("UserId")
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CourseId")
                         .HasColumnType("int");
 
                     b.Property<double>("CourseQualification")
                         .HasColumnType("float")
                         .HasColumnName("CourseQualification");
 
-                    b.HasKey("CourseId", "UserId");
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasAlternateKey("CourseId", "UserId");
 
                     b.HasIndex("UserId");
 

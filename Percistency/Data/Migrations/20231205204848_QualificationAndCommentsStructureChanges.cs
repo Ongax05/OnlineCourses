@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Percistency.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class Entities1 : Migration
+    public partial class QualificationAndCommentsStructureChanges : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -133,13 +133,16 @@ namespace Percistency.Data.Migrations
                 name: "Comment",
                 columns: table => new
                 {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     UserId = table.Column<int>(type: "int", nullable: false),
                     CourseId = table.Column<int>(type: "int", nullable: false),
                     CourseComment = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Comment", x => new { x.CourseId, x.UserId });
+                    table.PrimaryKey("PK_Comment", x => x.Id);
+                    table.UniqueConstraint("AK_Comment_CourseId_UserId", x => new { x.CourseId, x.UserId });
                     table.ForeignKey(
                         name: "FK_Comment_Course_CourseId",
                         column: x => x.CourseId,
@@ -158,13 +161,16 @@ namespace Percistency.Data.Migrations
                 name: "Qualidication",
                 columns: table => new
                 {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     UserId = table.Column<int>(type: "int", nullable: false),
                     CourseId = table.Column<int>(type: "int", nullable: false),
                     CourseQualification = table.Column<double>(type: "float", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Qualidication", x => new { x.CourseId, x.UserId });
+                    table.PrimaryKey("PK_Qualidication", x => x.Id);
+                    table.UniqueConstraint("AK_Qualidication_CourseId_UserId", x => new { x.CourseId, x.UserId });
                     table.CheckConstraint("CK_Qualification_CourseQualification", "[CourseQualification] >= 1 AND [CourseQualification] <= 5");
                     table.ForeignKey(
                         name: "FK_Qualidication_Course_CourseId",

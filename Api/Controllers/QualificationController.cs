@@ -33,31 +33,6 @@ namespace Api.Controllers
             await _unitOfWork.SaveAsync();
             return CreatedAtAction(nameof(Post), Qualification);
         }
-        
-        [HttpPut("{id}")]
-        public async Task<ActionResult<QualificationDto>> Put(
-            int id,
-            [FromBody] QualificationDto QualificationDto
-        )
-        {
-            if (QualificationDto == null)
-            {
-                return NotFound(404);
-            }
-            var Qualification = _mapper.Map<Qualification>(QualificationDto);
-            _unitOfWork.Qualifications.Update(Qualification);
-            await _unitOfWork.SaveAsync();
-            return QualificationDto;
-        }
-        
-        [HttpDelete("DeleteByIds")]
-        public async Task<ActionResult> Delete([FromQuery]int courseId, int UserId)
-        {
-            var Qualification = await _unitOfWork.Qualifications.GetByIdsAsync(courseId, UserId);
-
-            _unitOfWork.Qualifications.Remove(Qualification);
-            await _unitOfWork.SaveAsync();
-            return NoContent();
-        }
+    
     }
 }

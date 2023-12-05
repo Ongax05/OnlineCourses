@@ -8,6 +8,6 @@ namespace Domain.Interfaces
 {
     public interface IInstructor : IGenericRepository<Instructor>
     {
-        
+        Task<Instructor> GetInstructorByName(string name);
     }
 }

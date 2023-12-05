@@ -4,6 +4,7 @@ namespace API.Dtos;
 
     public class DataUserDto
     {
+    public int Id { get; set; }
     public string Message { get; set; }
     public bool IsAuthenticated { get; set; }
     public string UserName { get; set; }

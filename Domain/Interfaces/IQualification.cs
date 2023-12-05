@@ -7,13 +7,8 @@ using Domain.Entities;
 
 namespace Domain.Interfaces
 {
-    public interface IQualification
+    public interface IQualification : IGenericRepository<Qualification>
     {
-        Task<Qualification> GetByIdsAsync(int courseId, int UserId);
-        Task<IEnumerable<Qualification>> GetAllAsync();
-        IEnumerable<Qualification> Find(Expression<Func<Qualification, bool>> expression);
-        void Add(Qualification entity);
-        void Remove(Qualification entity);
-        void Update(Qualification entity);
+        
     }
 }
