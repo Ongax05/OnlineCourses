@@ -13,10 +13,21 @@ namespace Application.Repository
     public class QualificationRepository : GenericRepository<Qualification>, IQualification
     {
         private readonly CoursesDbContext context;
-        public QualificationRepository (CoursesDbContext context) : base(context)
+
+        public QualificationRepository(CoursesDbContext context)
+            : base(context)
         {
             this.context = context;
         }
 
+        // public async Task UpdateCourseAverage(int CourseId)
+        // {
+        //     var Course = await context
+        //         .Courses
+        //         .Where(c => c.Id == CourseId)
+        //         .Include(c => c.Qualifications)
+        //         .FirstOrDefaultAsync();
+        //     Course.AverageRating = Course.Qualifications.Average(q=>q.CourseQualification);
+        // }
     }
 }

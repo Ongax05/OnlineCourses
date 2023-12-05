@@ -31,6 +31,7 @@ namespace Api.Controllers
             var Qualification = _mapper.Map<Qualification>(QualificationDto);
             _unitOfWork.Qualifications.Add(Qualification);
             await _unitOfWork.SaveAsync();
+            //await _unitOfWork.Qualifications.UpdateCourseAverage(Qualification.CourseId) ;
             return CreatedAtAction(nameof(Post), Qualification);
         }
     

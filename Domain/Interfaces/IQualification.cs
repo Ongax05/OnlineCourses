@@ -9,6 +9,6 @@ namespace Domain.Interfaces
 {
     public interface IQualification : IGenericRepository<Qualification>
     {
-        
+        // Task UpdateCourseAverage (int CourseId);
     }
 }
