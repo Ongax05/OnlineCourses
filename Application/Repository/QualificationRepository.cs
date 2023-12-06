@@ -26,8 +26,8 @@ namespace Application.Repository
                 .Courses
                 .Where(c=>c.Id == CourseId)
                 .FirstOrDefaultAsync();
-             Console.WriteLine(Course.Qualifications.Average(q=>q.CourseQualification));
-             Course.AverageRating = Course.Qualifications.Average(q=>q.CourseQualification);
+            var QualificationAverage = await context.Qualifications.Where(q=>q.CourseId == Course.Id).AverageAsync(q=>q.CourseQualification);
+            Course.AverageRating = QualificationAverage;
         }
     }
 }
