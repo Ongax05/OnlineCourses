@@ -12,7 +12,7 @@ using Percistency.Data;
 namespace Percistency.Data.Migrations
 {
     [DbContext(typeof(CoursesDbContext))]
-    [Migration("20231205211859_CourseDescLengthAumented")]
+    [Migration("20231206144058_CourseDescLengthAumented")]
     partial class CourseDescLengthAumented
     {
         /// <inheritdoc />
@@ -47,7 +47,7 @@ namespace Percistency.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasAlternateKey("CourseId", "UserId");
+                    b.HasIndex("CourseId");
 
                     b.HasIndex("UserId");
 
@@ -137,7 +137,7 @@ namespace Percistency.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasAlternateKey("CourseId", "UserId");
+                    b.HasIndex("CourseId");
 
                     b.HasIndex("UserId");
 

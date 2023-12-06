@@ -20,14 +20,14 @@ namespace Application.Repository
             this.context = context;
         }
 
-        // public async Task UpdateCourseAverage(int CourseId)
-        // {
-        //     var Course = await context
-        //         .Courses
-        //         .Where(c => c.Id == CourseId)
-        //         .Include(c => c.Qualifications)
-        //         .FirstOrDefaultAsync();
-        //     Course.AverageRating = Course.Qualifications.Average(q=>q.CourseQualification);
-        // }
+        public async Task UpdateCourseAverage(int CourseId)
+        {
+            var Course = await context
+                .Courses
+                .Where(c=>c.Id == CourseId)
+                .FirstOrDefaultAsync();
+             Console.WriteLine(Course.Qualifications.Average(q=>q.CourseQualification));
+             Course.AverageRating = Course.Qualifications.Average(q=>q.CourseQualification);
+        }
     }
 }

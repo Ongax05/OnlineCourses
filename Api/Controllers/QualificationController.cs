@@ -26,13 +26,14 @@ namespace Api.Controllers
         }
         
         [HttpPost]
-        public async Task<ActionResult<Qualification>> Post(QualificationDto QualificationDto)
+        public async Task<ActionResult<int>> Post(QualificationDto QualificationDto)
         {
             var Qualification = _mapper.Map<Qualification>(QualificationDto);
             _unitOfWork.Qualifications.Add(Qualification);
+            int CourseId= Qualification.CourseId;
+            await _unitOfWork.Qualifications.UpdateCourseAverage(CourseId);
             await _unitOfWork.SaveAsync();
-            //await _unitOfWork.Qualifications.UpdateCourseAverage(Qualification.CourseId) ;
-            return CreatedAtAction(nameof(Post), Qualification);
+            return CreatedAtAction(nameof(Post),1);
         }
     
     }

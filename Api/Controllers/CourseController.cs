@@ -42,30 +42,5 @@ namespace Api.Controllers
             CourseDto.Id = Course.Id;
             return CreatedAtAction(nameof(Post), new { id = CourseDto.Id }, CourseDto);
         }
-        
-        [HttpPut("{id}")]
-        public async Task<ActionResult<CourseDto>> Put(
-            int id,
-            [FromBody] CourseDto CourseDto
-        )
-        {
-            if (CourseDto == null)
-            {
-                return NotFound(404);
-            }
-            var Course = _mapper.Map<Course>(CourseDto);
-            _unitOfWork.Courses.Update(Course);
-            await _unitOfWork.SaveAsync();
-            return CourseDto;
-        }
-        
-        [HttpDelete("{id}")]
-        public async Task<ActionResult> Delete(int id)
-        {
-            var Course = await _unitOfWork.Courses.GetByIdAsync(id);
-            _unitOfWork.Courses.Remove(Course);
-            await _unitOfWork.SaveAsync();
-            return NoContent();
-        }
     }
 }

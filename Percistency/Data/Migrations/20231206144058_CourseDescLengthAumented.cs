@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Percistency.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class QualificationAndCommentsStructureChanges : Migration
+    public partial class CourseDescLengthAumented : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -113,7 +113,7 @@ namespace Percistency.Data.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Title = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(300)", maxLength: 300, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false),
                     Image = table.Column<byte[]>(type: "varbinary(MAX)", nullable: false),
                     InstructorId = table.Column<int>(type: "int", nullable: false),
                     AverageRating = table.Column<double>(type: "float", nullable: false)
@@ -142,7 +142,6 @@ namespace Percistency.Data.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Comment", x => x.Id);
-                    table.UniqueConstraint("AK_Comment_CourseId_UserId", x => new { x.CourseId, x.UserId });
                     table.ForeignKey(
                         name: "FK_Comment_Course_CourseId",
                         column: x => x.CourseId,
@@ -170,7 +169,6 @@ namespace Percistency.Data.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Qualidication", x => x.Id);
-                    table.UniqueConstraint("AK_Qualidication_CourseId_UserId", x => new { x.CourseId, x.UserId });
                     table.CheckConstraint("CK_Qualification_CourseQualification", "[CourseQualification] >= 1 AND [CourseQualification] <= 5");
                     table.ForeignKey(
                         name: "FK_Qualidication_Course_CourseId",
@@ -187,6 +185,11 @@ namespace Percistency.Data.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_Comment_CourseId",
+                table: "Comment",
+                column: "CourseId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Comment_UserId",
                 table: "Comment",
                 column: "UserId");
@@ -201,6 +204,11 @@ namespace Percistency.Data.Migrations
                 table: "Instructor",
                 column: "UserId",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Qualidication_CourseId",
+                table: "Qualidication",
+                column: "CourseId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Qualidication_UserId",

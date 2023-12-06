@@ -21,6 +21,7 @@ namespace Api.Controllers
         [HttpGet("ByName")]
         public async Task<ActionResult<InstructorDto>> GetByName([FromQuery] string Name)
         {
+            Console.WriteLine(Name);
             var Instructor = await _unitOfWork.Instructors.GetInstructorByName(Name);
             return _mapper.Map<InstructorDto>(Instructor);
         }
