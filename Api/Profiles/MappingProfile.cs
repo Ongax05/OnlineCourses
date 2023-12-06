@@ -13,7 +13,9 @@ namespace API.Profiles
             .ForMember(dest=>dest.Name,Opt=>Opt.MapFrom(en=>en.User.Username))
             .ReverseMap();
             CreateMap<Qualification,QualificationDto>().ReverseMap();
-            CreateMap<Course,CourseWithEntities>().ReverseMap();
+            CreateMap<Course,CourseWithEntities>()
+            .AfterMap((src, dest) => dest.Instructor.Name = src.Instructor.User.Username)
+            .ReverseMap();
         }
     }
 }

@@ -25,8 +25,8 @@ namespace Application.Repository
             var register = await context
                 .Courses
                 .Where(c => c.Id == id)
-                .Include(c => c.Comments)
-                .Include(c => c.Qualifications)
+                .Include(c=>c.Instructor)
+                .ThenInclude(i=>i.User)
                 .FirstOrDefaultAsync();
             return register;
         }

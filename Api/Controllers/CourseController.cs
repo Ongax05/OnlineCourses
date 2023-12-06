@@ -26,10 +26,10 @@ namespace Api.Controllers
         }
 
         [HttpGet("ById")]
-        public async Task<ActionResult<CourseDto>> GetById([FromQuery] int Id)
+        public async Task<ActionResult<CourseWithEntities>> GetById([FromQuery] int Id)
         {
             var Register = await _unitOfWork.Courses.GetByIdAsync(Id);
-            var CourseMapped = _mapper.Map<CourseDto>(Register);
+            var CourseMapped = _mapper.Map<CourseWithEntities>(Register);
             return CourseMapped;
         }
         

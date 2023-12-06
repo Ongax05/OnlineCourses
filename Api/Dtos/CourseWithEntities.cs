@@ -13,7 +13,5 @@ namespace Api.Dtos
         public int InstructorId { get; set; }
         public InstructorDto Instructor { get; set; }
         public float AverageRating { get; set; }
-        public ICollection<CommentDto> Comments { get; set; }
-        public ICollection<QualificationDto> Qualifications { get; set; }
     }
 }
