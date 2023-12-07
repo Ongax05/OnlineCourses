@@ -14,7 +14,7 @@ public class UserController : ApiBaseController
     {
         _userService = userService;
     }
-    
+
     [Authorize(Roles = "Instructor")]
     [HttpPost("register")]
     public async Task<ActionResult> RegisterAsync(RegisterDto model)
@@ -22,7 +22,7 @@ public class UserController : ApiBaseController
         var result = await _userService.RegisterAsync(model);
         return Ok(result);
     }
-    [Authorize(Roles = "User,Instructor")]
+
     [HttpPost("token")]
     public async Task<IActionResult> GetTokenAsync(LoginDto model)
     {
@@ -34,6 +34,7 @@ public class UserController : ApiBaseController
 
         return Ok(result);
     }
+
     [Authorize(Roles = "Instructor")]
     [HttpPost("addrole")]
     public async Task<IActionResult> AddRoleAsync(AddRoleDto model)
@@ -41,6 +42,7 @@ public class UserController : ApiBaseController
         var result = await _userService.AddRoleAsync(model);
         return Ok(result);
     }
+
     [Authorize(Roles = "User,Instructor")]
     [HttpPost("refresh-token")]
     public async Task<IActionResult> RefreshToken()
@@ -52,7 +54,6 @@ public class UserController : ApiBaseController
         return Ok(response);
     }
 
-
     private void SetRefreshTokenInCookie(string refreshToken)
     {
         var cookieOptions = new CookieOptions
@@ -62,5 +63,4 @@ public class UserController : ApiBaseController
         };
         Response.Cookies.Append("refreshToken", refreshToken, cookieOptions);
     }
-    
 }
