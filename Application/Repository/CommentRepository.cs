@@ -16,5 +16,16 @@ namespace Application.Repository
         private readonly CoursesDbContext context;
         public CommentRepository(CoursesDbContext context) : base (context) => this.context = context;
 
+        public async Task<IEnumerable<Comment>> GetCommentsByCourse(int CourseId)
+        {
+            var Comments = await context.Comments.Where(c=>c.CourseId == CourseId).ToListAsync();
+            return Comments;
+        }
+
+        public async Task<IEnumerable<Comment>> GetCommentsByUser(int UserId)
+        {
+            var Comments = await context.Comments.Where(c=>c.UserId == UserId).ToListAsync();
+            return Comments;
+        }
     }
 }

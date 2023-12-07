@@ -17,10 +17,18 @@ namespace Api.Controllers
             _mapper = mapper;
         }
         
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<CommentDto>>> Get1_1()
+        [HttpGet ("ByCourse")]
+        public async Task<ActionResult<IEnumerable<CommentDto>>> GetByCourse([FromQuery] int CourseId)
         {
-            var registers = await _unitOfWork.Comments.GetAllAsync();
+            var registers = await _unitOfWork.Comments.GetCommentsByCourse(CourseId);
+            var CommentListDto = _mapper.Map<List<CommentDto>>(registers);
+            return CommentListDto;
+        }
+
+        [HttpGet ("ByUser")]
+        public async Task<ActionResult<IEnumerable<CommentDto>>> GetByUsers([FromQuery] int UserId)
+        {
+            var registers = await _unitOfWork.Comments.GetCommentsByUser(UserId);
             var CommentListDto = _mapper.Map<List<CommentDto>>(registers);
             return CommentListDto;
         }

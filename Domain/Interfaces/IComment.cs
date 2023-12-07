@@ -9,5 +9,7 @@ namespace Domain.Interfaces
 {
     public interface IComment : IGenericRepository<Comment>
     {
+        Task<IEnumerable<Comment>> GetCommentsByCourse (int CourseId);
+        Task<IEnumerable<Comment>> GetCommentsByUser (int UserId);
     }
 }
