@@ -27,11 +27,6 @@ public class UserController : ApiBaseController
     public async Task<IActionResult> GetTokenAsync(LoginDto model)
     {
         var result = await _userService.GetTokenAsync(model);
-        if (!string.IsNullOrEmpty(result.RefreshToken))
-        {
-            SetRefreshTokenInCookie(result.RefreshToken);
-        }
-
         return Ok(result);
     }
 
@@ -45,22 +40,9 @@ public class UserController : ApiBaseController
 
     [Authorize(Roles = "User,Instructor")]
     [HttpPost("refresh-token")]
-    public async Task<IActionResult> RefreshToken()
+    public async Task<IActionResult> RefreshToken([FromQuery]string refreshToken)
     {
-        var refreshToken = Request.Cookies["refreshToken"];
         var response = await _userService.RefreshTokenAsync(refreshToken);
-        if (!string.IsNullOrEmpty(response.RefreshToken))
-            SetRefreshTokenInCookie(response.RefreshToken);
         return Ok(response);
-    }
-
-    private void SetRefreshTokenInCookie(string refreshToken)
-    {
-        var cookieOptions = new CookieOptions
-        {
-            HttpOnly = true,
-            Expires = DateTime.UtcNow.AddMinutes(10),
-        };
-        Response.Cookies.Append("refreshToken", refreshToken, cookieOptions);
     }
 }

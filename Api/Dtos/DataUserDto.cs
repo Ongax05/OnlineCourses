@@ -12,7 +12,7 @@ namespace API.Dtos;
     public List<string> Roles { get; set; }
     public string Token { get; set; }
 
-    [JsonIgnore] // ->this attribute restricts the property to be shown in the result
     public string RefreshToken { get; set; }
+    [JsonIgnore] // ->this attribute restricts the property to be shown in the result
     public DateTime RefreshTokenExpiration { get; set; }        
     }
