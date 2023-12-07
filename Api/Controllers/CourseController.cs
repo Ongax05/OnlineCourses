@@ -2,6 +2,7 @@ using Api.Dtos;
 using AutoMapper;
 using Domain.Entities;
 using Domain.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers
@@ -10,13 +11,14 @@ namespace Api.Controllers
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-        
+
         public CourseController(IUnitOfWork unitOfWork, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
-        
+
+        [Authorize(Roles = "User,Instructor")]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<CourseDto>>> Get1_1()
         {
@@ -25,6 +27,7 @@ namespace Api.Controllers
             return CourseListDto;
         }
 
+        [Authorize(Roles = "User,Instructor")]
         [HttpGet("ById")]
         public async Task<ActionResult<CourseWithEntities>> GetById([FromQuery] int Id)
         {
@@ -33,6 +36,7 @@ namespace Api.Controllers
             return CourseMapped;
         }
         
+        [Authorize(Roles = "Instructor")]
         [HttpPost]
         public async Task<ActionResult<Course>> Post(CourseDto CourseDto)
         {

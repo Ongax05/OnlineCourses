@@ -3,10 +3,12 @@ using Application.UnitOfWork;
 using AutoMapper;
 using Domain.Entities;
 using Domain.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers
 {
+    [Authorize(Roles = "User,Instructor")]
     public class InstructorController : ApiBaseController
     {
         private readonly IUnitOfWork _unitOfWork;
