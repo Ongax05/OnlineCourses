@@ -18,18 +18,20 @@ namespace Api.Controllers
         }
         
         [HttpGet("ByCourse")]
-        public async Task<ActionResult<IEnumerable<QualificationDto>>> GetByCourse([FromQuery] int CourseId)
+        public async Task<ActionResult<AverageDto>> GetByCourse([FromQuery] int CourseId)
         {
-            var registers = await _unitOfWork.Qualifications.GetQualificationsByCourse(CourseId);
-            var QualificationListDto = _mapper.Map<List<QualificationDto>>(registers);
-            return QualificationListDto;
+            var average = await _unitOfWork.Qualifications.GetAverageQualificationByCourse(CourseId);
+            var AverageDto = new AverageDto()
+            {
+                Average = average
+            };
+            return AverageDto;
         }
         [HttpGet("ByUser")]
-        public async Task<ActionResult<IEnumerable<QualificationDto>>> GetByUser([FromQuery] int UserId)
+        public async Task<ActionResult<List<QualificationDto>>> GetByUser([FromQuery] int UserId)
         {
-            var registers = await _unitOfWork.Qualifications.GetQualificationsByUser(UserId);
-            var QualificationListDto = _mapper.Map<List<QualificationDto>>(registers);
-            return QualificationListDto;
+            var qualifications = await _unitOfWork.Qualifications.GetQualificationsByUser(UserId);
+            return _mapper.Map<List<QualificationDto>>(qualifications);
         }
         
         [HttpPost]
@@ -38,9 +40,7 @@ namespace Api.Controllers
             var Qualification = _mapper.Map<Qualification>(QualificationDto);
             _unitOfWork.Qualifications.Add(Qualification);
             int CourseId= Qualification.CourseId;
-            Console.WriteLine("eNTRO HHPTA");
             await _unitOfWork.Qualifications.UpdateCourseAverage(CourseId);
-            Console.WriteLine("SALIO");
             await _unitOfWork.SaveAsync();
             return CreatedAtAction(nameof(Post),1);
         }

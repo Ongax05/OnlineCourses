@@ -9,8 +9,8 @@ namespace Domain.Interfaces
 {
     public interface IQualification : IGenericRepository<Qualification>
     {
-        Task UpdateCourseAverage (int CourseId);
-        Task<IEnumerable<Qualification>> GetQualificationsByCourse (int CourseId);
-        Task<IEnumerable<Qualification>> GetQualificationsByUser (int UserId);
+        Task UpdateCourseAverage(int CourseId);
+        Task<double> GetAverageQualificationByCourse(int CourseId);
+        Task<List<Qualification>> GetQualificationsByUser(int UserId);
     }
 }

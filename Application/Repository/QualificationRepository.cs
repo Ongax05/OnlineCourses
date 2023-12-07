@@ -20,13 +20,13 @@ namespace Application.Repository
             this.context = context;
         }
 
-        public async Task<IEnumerable<Qualification>> GetQualificationsByCourse(int CourseId)
+        public async Task<double> GetAverageQualificationByCourse(int CourseId)
         {
-            var Qualifications = await context.Qualifications.Where(q=>q.CourseId == CourseId).ToListAsync();
+            var Qualifications = await context.Qualifications.Where(q=>q.CourseId == CourseId).AverageAsync(q=>q.CourseQualification);
             return Qualifications;
         }
 
-        public async Task<IEnumerable<Qualification>> GetQualificationsByUser(int UserId)
+        public async Task<List<Qualification>> GetQualificationsByUser(int UserId)
         {
             var Qualifications = await context.Qualifications.Where(q=>q.UserId == UserId).ToListAsync();
             return Qualifications;
@@ -40,7 +40,6 @@ namespace Application.Repository
                 .Where(c=>c.Id == CourseId)
                 .FirstOrDefaultAsync();
             Course.AverageRating = Course.Qualifications.Average(q=>q.CourseQualification);
-            Console.WriteLine($"\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n{Course.AverageRating}");
             await context.SaveChangesAsync();
         }
     }
