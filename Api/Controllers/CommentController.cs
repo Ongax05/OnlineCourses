@@ -2,10 +2,12 @@ using Api.Dtos;
 using AutoMapper;
 using Domain.Entities;
 using Domain.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers
 {
+    [Authorize(Roles = "User,Instructor")]
     public class CommentController : ApiBaseController
     {
         private readonly IUnitOfWork _unitOfWork;

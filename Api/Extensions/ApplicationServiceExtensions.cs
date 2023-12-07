@@ -35,18 +35,17 @@ public static class ApplicationServiceExtensions
         services.AddScoped<IUnitOfWork, UnitOfWork>();
     }
 
-    public static void AddJwt(this IServiceCollection services, IConfiguration configuration)
+     public static void AddJwt(this IServiceCollection services, IConfiguration configuration)
     {
         //Configuration from AppSettings
         services.Configure<JWT>(configuration.GetSection("JWT"));
 
         //Adding Athentication - JWT
-        services
-            .AddAuthentication(options =>
-            {
-                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            })
+        services.AddAuthentication(options =>
+        {
+            options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+        })
             .AddJwtBearer(o =>
             {
                 o.RequireHttpsMetadata = false;
@@ -60,13 +59,10 @@ public static class ApplicationServiceExtensions
                     ClockSkew = TimeSpan.Zero,
                     ValidIssuer = configuration["JWT:Issuer"],
                     ValidAudience = configuration["JWT:Audience"],
-                    IssuerSigningKey = new SymmetricSecurityKey(
-                        Encoding.UTF8.GetBytes(configuration["JWT:Key"])
-                    )
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWT:Key"]))
                 };
             });
     }
-
     public static void AddValidationErrors(this IServiceCollection services)
     {
         services.Configure<ApiBehaviorOptions>(options =>

@@ -43,8 +43,12 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.UseAuthorization();
+
+//IMPORTANT THIS METHOD BEFORE AUTHORIZATION
 app.UseAuthentication();
+
+app.UseAuthorization();
+
 app.UseIpRateLimiting();
 app.MapControllers();
 app.Run();
