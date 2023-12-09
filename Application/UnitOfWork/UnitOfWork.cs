@@ -2,76 +2,98 @@ using Application.Repository;
 using Domain.Entities;
 using Domain.Interfaces;
 using Percistency.Data;
-namespace Application.UnitOfWork;
-public class UnitOfWork : IUnitOfWork, IDisposable
+
+namespace Application.UnitOfWork
 {
-    private readonly CoursesDbContext _context;
-    private IRolRepository _roles;
-    private IUserRepository _users;
-    public UnitOfWork(CoursesDbContext context)
+    // Unit of Work class for managing repositories and database interactions
+    public class UnitOfWork : IUnitOfWork
     {
-        _context = context;
-    }
-    public IRolRepository Roles
-    {
-        get
-        {
-            _roles ??= new RolRepository(_context);
-            return _roles;
-        }
-    }
+        // Private field to store the instance of CoursesDbContext
+        private readonly CoursesDbContext _context;
 
-    public IUserRepository Users
-    {
-        get
-        {
-            _users ??= new UserRepository(_context);
-            return _users;
-        }
-    }
-    public async Task<int> SaveAsync()
-    {
-        return await _context.SaveChangesAsync();
-    }
-    private IComment _Comments;
-    public IComment Comments
-    {
-        get
-        {
-            _Comments ??= new CommentRepository(_context);
-            return _Comments;
-        }
-    }
-    private ICourse _Courses;
-    public ICourse Courses
-    {
-        get
-        {
-            _Courses ??= new CourseRepository(_context);
-            return _Courses;
-        }
-    }
-    private IInstructor _Instructors;
-    public IInstructor Instructors
-    {
-        get
-        {
-            _Instructors ??= new InstructorRepository(_context);
-            return _Instructors;
-        }
-    }
-    private IQualification _Qualifications;
-    public IQualification Qualifications
-    {
-        get
-        {
-            _Qualifications ??= new QualificationRepository(_context);
-            return _Qualifications;
-        }
-    }
+        // Repositories
+        private IRolRepository _roles;
+        private IUserRepository _users;
+        private IComment _comments;
+        private ICourse _courses;
+        private IInstructor _instructors;
+        private IQualification _qualifications;
 
-    public void Dispose()
-    {
-        _context.Dispose();
+        // Constructor to initialize the UnitOfWork with a CoursesDbContext
+        public UnitOfWork(CoursesDbContext context)
+        {
+            _context = context;
+        }
+
+        // Property to access the repository for roles
+        public IRolRepository Roles
+        {
+            get
+            {
+                _roles ??= new RolRepository(_context);
+                return _roles;
+            }
+        }
+
+        // Property to access the repository for users
+        public IUserRepository Users
+        {
+            get
+            {
+                _users ??= new UserRepository(_context);
+                return _users;
+            }
+        }
+
+        // Property to access the repository for comments
+        public IComment Comments
+        {
+            get
+            {
+                _comments ??= new CommentRepository(_context);
+                return _comments;
+            }
+        }
+
+        // Property to access the repository for courses
+        public ICourse Courses
+        {
+            get
+            {
+                _courses ??= new CourseRepository(_context);
+                return _courses;
+            }
+        }
+
+        // Property to access the repository for instructors
+        public IInstructor Instructors
+        {
+            get
+            {
+                _instructors ??= new InstructorRepository(_context);
+                return _instructors;
+            }
+        }
+
+        // Property to access the repository for qualifications
+        public IQualification Qualifications
+        {
+            get
+            {
+                _qualifications ??= new QualificationRepository(_context);
+                return _qualifications;
+            }
+        }
+
+        // Asynchronous method to save changes to the underlying data store
+        public async Task<int> SaveAsync()
+        {
+            return await _context.SaveChangesAsync();
+        }
+
+        public void Dispose()
+        {
+            _context.Dispose();
+        }
     }
 }

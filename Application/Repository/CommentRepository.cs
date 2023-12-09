@@ -11,20 +11,28 @@ using Percistency.Data;
 
 namespace Application.Repository
 {
+    // Repository class for handling comments, inheriting from the GenericRepository<Comment> class and implementing IComment interface
     public class CommentRepository : GenericRepository<Comment>, IComment
     {
+        // Private field to store the instance of CoursesDbContext
         private readonly CoursesDbContext context;
-        public CommentRepository(CoursesDbContext context) : base (context) => this.context = context;
 
+        // Constructor to initialize the repository with a CoursesDbContext
+        public CommentRepository(CoursesDbContext context) : base(context) => this.context = context;
+
+        // Method to retrieve comments for a specific course asynchronously
         public async Task<IEnumerable<Comment>> GetCommentsByCourse(int CourseId)
         {
-            var Comments = await context.Comments.Where(c=>c.CourseId == CourseId).ToListAsync();
+            // Retrieve comments from the context where the CourseId matches the specified value
+            var Comments = await context.Comments.Where(c => c.CourseId == CourseId).ToListAsync();
             return Comments;
         }
 
+        // Method to retrieve comments for a specific user asynchronously
         public async Task<IEnumerable<Comment>> GetCommentsByUser(int UserId)
         {
-            var Comments = await context.Comments.Where(c=>c.UserId == UserId).ToListAsync();
+            // Retrieve comments from the context where the UserId matches the specified value
+            var Comments = await context.Comments.Where(c => c.UserId == UserId).ToListAsync();
             return Comments;
         }
     }

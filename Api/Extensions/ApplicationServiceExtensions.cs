@@ -1,3 +1,6 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using API.Helpers;
 using API.Services;
@@ -8,44 +11,49 @@ using Domain.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 
-namespace API.Extensions;
-
-public static class ApplicationServiceExtensions
+namespace API.Extensions
 {
-    public static void ConfigureCors(this IServiceCollection services) =>
-        services.AddCors(options =>
-        {
-            options.AddPolicy(
-                "CorsPolicy",
-                builder =>
-                    builder
-                        .WithOrigins("http://localhost:5275")
-                        .AllowAnyMethod()
-                        .AllowAnyHeader()
-                        .AllowCredentials()
-            );
-        });
-
-    public static void AddAplicacionServices(this IServiceCollection services)
+    public static class ApplicationServiceExtensions
     {
-        services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
-        services.AddScoped<IUserService, UserService>();
-        services.AddScoped<IUnitOfWork, UnitOfWork>();
-    }
+        // Configure Cross-Origin Resource Sharing (CORS)
+        public static void ConfigureCors(this IServiceCollection services) =>
+            services.AddCors(options =>
+            {
+                options.AddPolicy(
+                    "CorsPolicy",
+                    builder =>
+                        builder
+                            .WithOrigins("http://localhost:5275")
+                            .AllowAnyMethod()
+                            .AllowAnyHeader()
+                            .AllowCredentials()
+                );
+            });
 
-     public static void AddJwt(this IServiceCollection services, IConfiguration configuration)
-    {
-        //Configuration from AppSettings
-        services.Configure<JWT>(configuration.GetSection("JWT"));
-
-        //Adding Athentication - JWT
-        services.AddAuthentication(options =>
+        // Add application services to the dependency injection container
+        public static void AddAplicacionServices(this IServiceCollection services)
         {
-            options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-            options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-        })
+            services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
+            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
+        }
+
+        // Add JWT authentication
+        public static void AddJwt(this IServiceCollection services, IConfiguration configuration)
+        {
+            // Configuration from AppSettings
+            services.Configure<JWT>(configuration.GetSection("JWT"));
+
+            // Adding Authentication - JWT
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
             .AddJwtBearer(o =>
             {
                 o.RequireHttpsMetadata = false;
@@ -62,47 +70,51 @@ public static class ApplicationServiceExtensions
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWT:Key"]))
                 };
             });
-    }
-    public static void AddValidationErrors(this IServiceCollection services)
-    {
-        services.Configure<ApiBehaviorOptions>(options =>
+        }
+
+        // Configure validation errors for API responses
+        public static void AddValidationErrors(this IServiceCollection services)
         {
-            options.InvalidModelStateResponseFactory = actionContext =>
+            services.Configure<ApiBehaviorOptions>(options =>
             {
-                var errors = actionContext
-                    .ModelState
-                    .Where(u => u.Value.Errors.Count > 0)
-                    .SelectMany(u => u.Value.Errors)
-                    .Select(u => u.ErrorMessage)
-                    .ToArray();
-
-                var errorResponse = new ApiValidation() { Errors = errors };
-
-                return new BadRequestObjectResult(errorResponse);
-            };
-        });
-    }
-
-    public static void ConfigureRateLimiting(this IServiceCollection services)
-    {
-        services.AddMemoryCache();
-        services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>();
-        services.AddInMemoryRateLimiting();
-        services.Configure<IpRateLimitOptions>(options =>
-        {
-            options.EnableEndpointRateLimiting = true;
-            options.StackBlockedRequests = false;
-            options.HttpStatusCode = 429;
-            options.RealIpHeader = "X-Real-IP";
-            options.GeneralRules = new List<RateLimitRule>
-            {
-                new()
+                options.InvalidModelStateResponseFactory = actionContext =>
                 {
-                    Endpoint = "*",
-                    Limit = 10,
-                    Period = "15s"
-                }
-            };
-        });
+                    var errors = actionContext
+                        .ModelState
+                        .Where(u => u.Value.Errors.Count > 0)
+                        .SelectMany(u => u.Value.Errors)
+                        .Select(u => u.ErrorMessage)
+                        .ToArray();
+
+                    var errorResponse = new ApiValidation() { Errors = errors };
+
+                    return new BadRequestObjectResult(errorResponse);
+                };
+            });
+        }
+
+        // Configure rate limiting for API requests
+        public static void ConfigureRateLimiting(this IServiceCollection services)
+        {
+            services.AddMemoryCache();
+            services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>();
+            services.AddInMemoryRateLimiting();
+            services.Configure<IpRateLimitOptions>(options =>
+            {
+                options.EnableEndpointRateLimiting = true;
+                options.StackBlockedRequests = false;
+                options.HttpStatusCode = 429;
+                options.RealIpHeader = "X-Real-IP";
+                options.GeneralRules = new List<RateLimitRule>
+                {
+                    new()
+                    {
+                        Endpoint = "*",
+                        Limit = 10,
+                        Period = "15s"
+                    }
+                };
+            });
+        }
     }
 }

@@ -3,55 +3,51 @@ using Domain.Entities;
 using Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Percistency.Data;
-namespace Application.Repository;
-public class GenericRepository<T> : IGenericRepository<T> where T : BaseEntity
-{
-    private readonly CoursesDbContext _context;
 
-    public GenericRepository(CoursesDbContext context)
+namespace Application.Repository
+{
+    // Generic repository class implementing the IGenericRepository interface
+    public class GenericRepository<T> : IGenericRepository<T> where T : BaseEntity
     {
-        _context = context;
-    }
-    public virtual void Add(T entity)
-    {
-        _context.Set<T>().Add(entity);
-    }
-    public virtual void AddRange(IEnumerable<T> entities)
-    {
-        _context.Set<T>().AddRange(entities);
-    }
-    public virtual IEnumerable<T> Find(Expression<Func<T, bool>> expression)
-    {
-        return _context.Set<T>().Where(expression);
-    }
-    public virtual async Task<IEnumerable<T>> GetAllAsync()
-    {
-        return await _context.Set<T>().ToListAsync();
-    }
-    public virtual async Task<(int totalRegisters, IEnumerable<T> registers)> GetAllAsync (int pageIndex, int pageSize, string Search){
-            var totalRegisters = await _context.Set<T>().CountAsync();
-            var registers = await _context.Set<T>().Skip((pageIndex -1) * pageSize).Take(pageSize).ToListAsync();
-            return (totalRegisters, registers);
+        // DbContext to interact with the database
+        private readonly CoursesDbContext _context;
+
+        // Constructor to initialize the repository with a DbContext
+        public GenericRepository(CoursesDbContext context)
+        {
+            _context = context;
         }
-    public virtual async Task<T> GetByIdAsync(int id)
-    {
-        return await _context.Set<T>().FindAsync(id);
-    }
-    public virtual async Task<T> GetByIdAsync(string id)
-    {
-       return await _context.Set<T>().FindAsync(id);
-    }
-    public virtual void Remove(T entity)
-    {
-        _context.Set<T>().Remove(entity);
-    }
-    public virtual void RemoveRange(IEnumerable<T> entities)
-    {
-        _context.Set<T>().RemoveRange(entities);
-    }
-    public virtual void Update(T entity)
-    {
-        _context.Set<T>()
-            .Update(entity);
+
+        // Method to add a single entity to the repository
+        public virtual void Add(T entity)
+        {
+            _context.Set<T>().Add(entity);
+        }
+        // Method to find entities based on a specified expression
+        public virtual IEnumerable<T> Find(Expression<Func<T, bool>> expression)
+        {
+            return _context.Set<T>().Where(expression);
+        }
+
+        // Method to retrieve all entities asynchronously
+        public virtual async Task<IEnumerable<T>> GetAllAsync()
+        {
+            return await _context.Set<T>().ToListAsync();
+        }
+        // Method to retrieve an entity by its integer ID asynchronously
+        public virtual async Task<T> GetByIdAsync(int id)
+        {
+            return await _context.Set<T>().FindAsync(id);
+        }
+        // Method to remove a single entity from the repository
+        public virtual void Remove(T entity)
+        {
+            _context.Set<T>().Remove(entity);
+        }
+        // Method to update an entity in the repository
+        public virtual void Update(T entity)
+        {
+            _context.Set<T>().Update(entity);
+        }
     }
 }
