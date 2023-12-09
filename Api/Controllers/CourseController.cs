@@ -1,4 +1,5 @@
 using Api.Dtos;
+using Application.UnitOfWork;
 using AutoMapper;
 using Domain.Entities;
 using Domain.Interfaces;
@@ -28,7 +29,7 @@ namespace Api.Controllers
         {
             // Retrieve all courses from the repository
             var registers = await _unitOfWork.Courses.GetAllAsync();
-            
+
             // Map the retrieved courses to CourseDto
             var CourseListDto = _mapper.Map<List<CourseDto>>(registers);
 
@@ -36,7 +37,7 @@ namespace Api.Controllers
             return CourseListDto;
         }
 
-         // GET action to retrieve a course by its ID and just for "Users" and " "Instructors"
+        // GET action to retrieve a course by its ID and just for "Users" and " "Instructors"
         [Authorize(Roles = "User,Instructor")]
         [HttpGet("ById")]
         public async Task<ActionResult<CourseWithEntities>> GetById([FromQuery] int Id)
@@ -50,8 +51,8 @@ namespace Api.Controllers
             // Return the mapped CourseWithEntities
             return CourseMapped;
         }
-        
-         // POST action to create a new course and just can be added by s"Instructors"
+
+        // POST action to create a new course and just can be added by s"Instructors"
         [Authorize(Roles = "Instructor")]
         [HttpPost]
         public async Task<ActionResult<Course>> Post(CourseDto CourseDto)
@@ -70,6 +71,26 @@ namespace Api.Controllers
 
             // Return the created course
             return CreatedAtAction(nameof(Post), new { id = CourseDto.Id }, CourseDto);
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpDelete("DeleteCourseById")]
+        public async Task<ActionResult<string>> DeleteCourseById([FromQuery]int CourseId)
+        {
+            //Get course entity by its id
+            var course = await _unitOfWork.Courses.GetByIdAsync(CourseId);
+
+            if (course == null)
+            {
+                // Return a 404 Not Found response if the course with the given ID is not found
+                return NotFound($"Course with ID {CourseId} not found");
+            }
+
+            _unitOfWork.Courses.Remove(course);
+            await _unitOfWork.SaveAsync();
+
+            // Return a 200 OK response with a message indicating that the course has been deleted
+            return Ok($"Course with ID {CourseId} has been deleted");
         }
     }
 }

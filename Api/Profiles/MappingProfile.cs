@@ -11,10 +11,12 @@ namespace API.Profiles
         public MappingProfile()
         {
             // Map between Comment and CommentDto in both directions
-            CreateMap<Comment, CommentDto>().ReverseMap();
+            CreateMap<Comment, CommentDto>()
+                .ReverseMap();
 
             // Map between Course and CourseDto in both directions
-            CreateMap<Course, CourseDto>().ReverseMap();
+            CreateMap<Course, CourseDto>()
+                .ReverseMap();
 
             // Map between Instructor and InstructorDto, specifying a custom mapping for the Name property
             CreateMap<Instructor, InstructorDto>()
@@ -22,11 +24,19 @@ namespace API.Profiles
                 .ReverseMap();
 
             // Map between Qualification and QualificationDto in both directions
-            CreateMap<Qualification, QualificationDto>().ReverseMap();
+            CreateMap<Qualification, QualificationDto>()
+                .ReverseMap();
 
             // Map between Course and CourseWithEntities, with a custom mapping for the Instructor's Name property
             CreateMap<Course, CourseWithEntities>()
                 .AfterMap((src, dest) => dest.Instructor.Name = src.Instructor.User.Username)
+                .ReverseMap();
+
+            CreateMap<User, UserBasicInformation>()
+                .ForMember(
+                    dest => dest.Roles,
+                    opt => opt.MapFrom(src => src.Roles.Select(r => r.Name))
+                )
                 .ReverseMap();
         }
     }
